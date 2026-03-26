@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback } from 'react';
-import { Upload, ImageIcon } from 'lucide-react';
+import { Upload, ImageIcon, CheckCircle2 } from 'lucide-react';
 import { motion } from 'motion/react';
 
 interface Props {
@@ -9,6 +9,7 @@ interface Props {
 export default function StepUpload({ onUpload }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
+  const [preview, setPreview] = useState<string | null>(null);
 
   const processFile = useCallback(
     (file: File) => {
@@ -17,8 +18,8 @@ export default function StepUpload({ onUpload }: Props) {
       reader.onload = (e) => {
         const dataUrl = e.target?.result as string;
         const base64 = dataUrl.split(',')[1];
-        const preview = dataUrl;
-        onUpload(base64, file.type, preview);
+        setPreview(dataUrl);
+        onUpload(base64, file.type, dataUrl);
       };
       reader.readAsDataURL(file);
     },
@@ -52,16 +53,34 @@ export default function StepUpload({ onUpload }: Props) {
         onDragLeave={() => setDragging(false)}
         onDrop={handleDrop}
         onClick={() => inputRef.current?.click()}
-        className={`relative w-full max-w-lg h-64 rounded-2xl border-2 border-dashed cursor-pointer flex flex-col items-center justify-center gap-4 transition-colors
-          ${dragging ? 'border-neutral-700 bg-neutral-100' : 'border-neutral-300 bg-white hover:border-neutral-500'}`}
+        className={`relative w-full max-w-lg rounded-2xl border-2 cursor-pointer overflow-hidden transition-colors
+          ${preview ? 'border-neutral-800' : 'border-dashed'}
+          ${dragging ? 'border-neutral-700 bg-neutral-100' : preview ? 'border-neutral-800' : 'border-neutral-300 bg-white hover:border-neutral-500'}`}
+        style={{ minHeight: '16rem' }}
       >
-        <div className="flex items-center justify-center w-14 h-14 rounded-full bg-neutral-100">
-          <Upload className="w-6 h-6 text-neutral-500" />
-        </div>
-        <div className="text-center">
-          <p className="font-medium text-neutral-700">Drop your photo here</p>
-          <p className="text-sm text-neutral-400 mt-1">or click to browse — JPG, PNG, WEBP</p>
-        </div>
+        {preview ? (
+          <>
+            <img
+              src={preview}
+              alt="Your room"
+              className="w-full h-64 object-cover"
+            />
+            <div className="flex items-center gap-2 px-4 py-2.5 bg-white">
+              <CheckCircle2 className="w-4 h-4 text-green-600 shrink-0" />
+              <span className="text-sm text-neutral-600 font-medium">Photo uploaded — click to change</span>
+            </div>
+          </>
+        ) : (
+          <div className="flex flex-col items-center justify-center gap-4 h-64">
+            <div className="flex items-center justify-center w-14 h-14 rounded-full bg-neutral-100">
+              <Upload className="w-6 h-6 text-neutral-500" />
+            </div>
+            <div className="text-center">
+              <p className="font-medium text-neutral-700">Drop your photo here</p>
+              <p className="text-sm text-neutral-400 mt-1">or click to browse — JPG, PNG, WEBP</p>
+            </div>
+          </div>
+        )}
         <input
           ref={inputRef}
           type="file"
@@ -71,10 +90,12 @@ export default function StepUpload({ onUpload }: Props) {
         />
       </motion.div>
 
-      <div className="flex items-center gap-2 text-sm text-neutral-400">
-        <ImageIcon className="w-4 h-4" />
-        <span>Best results with well-lit, wide-angle room photos</span>
-      </div>
+      {!preview && (
+        <div className="flex items-center gap-2 text-sm text-neutral-400">
+          <ImageIcon className="w-4 h-4" />
+          <span>Best results with well-lit, wide-angle room photos</span>
+        </div>
+      )}
     </div>
   );
 }
