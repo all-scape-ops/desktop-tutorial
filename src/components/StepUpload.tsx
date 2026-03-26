@@ -42,7 +42,7 @@ export default function StepUpload({ onUpload }: Props) {
           Upload your room
         </h2>
         <p className="text-base text-neutral-500 max-w-md">
-          Share a photo of your living room, bedroom, or kitchen — our system handles the rest.
+          Upload a photo of your room. AI will redesign it with real furniture placed inside — each item linked and priced under your chosen budget.
         </p>
       </div>
 

@@ -109,13 +109,6 @@ export default function App() {
         </div>
       </header>
 
-      {/* Demo mode banner */}
-      {IS_DEMO && (
-        <div className="bg-amber-50 border-b border-amber-200 text-center py-1.5">
-          <span className="text-xs font-medium text-amber-700">Demo mode — sample designs shown. Add a Gemini API key to generate real AI results.</span>
-        </div>
-      )}
-
       {/* Room preview thumbnail (visible after upload) */}
       {imagePreview && step !== 'upload' && (
         <div className="max-w-3xl mx-auto px-6 pt-4 flex items-center gap-3">

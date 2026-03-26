@@ -10,7 +10,7 @@ export const STYLE_OPTIONS: StyleOption[] = [
   {
     id: 'industrial-loft',
     name: 'Industrial Loft',
-    image: 'https://images.unsplash.com/photo-1505873242700-f289a29e1724?w=600&q=80',
+    image: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=600&q=80',
     description: 'Raw materials, exposed brick, metal accents.',
   },
   {
