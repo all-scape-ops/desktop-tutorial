@@ -397,7 +397,7 @@ Rules for each tier:
 - Max 5 items per tier.
 - Sum of prices must be STRICTLY under the tier budget.
 - Links must be real Amazon, Wayfair, IKEA, Target, or Home Depot product or search pages.
-- Items must match the ${t} aesthetic.`,m=((await e.models.generateContent({model:"gemini-1.5-flash",contents:a})).text??"{}").match(/\{[\s\S]*\}/);if(!m)return{};try{return JSON.parse(m[0])}catch{return{}}}async function EV(e,t,i,s,r,a,f){var T,S,C,_;const h=a.map(M=>`- ${M.name} (${M.price})`).join(`
+- Items must match the ${t} aesthetic.`,m=((await e.models.generateContent({model:"gemini-2.0-flash",contents:a})).text??"{}").match(/\{[\s\S]*\}/);if(!m)return{};try{return JSON.parse(m[0])}catch{return{}}}async function EV(e,t,i,s,r,a,f){var T,S,C,_;const h=a.map(M=>`- ${M.name} (${M.price})`).join(`
 `),m=r.amount>=2500?"You MAY change the flooring material and wall color or texture.":r.amount>=1e3?"Keep the existing floor and walls but update the furniture layout.":"Keep all structural elements (walls, floor, ceiling) unchanged.",p=`You are an expert interior designer. Redesign this exact room in the "${s}" style by placing these products inside it:
 ${h}
 
