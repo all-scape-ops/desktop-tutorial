@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}My Reservations - DentalConnect{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">My Reservations</h2>
+
+{% if reservations %}
+<div class="row g-3">
+    {% for res in reservations %}
+    <div class="col-md-6">
+        <div class="card {% if res.status == 'confirmed' %}border-success{% elif res.status == 'completed' %}border-primary{% else %}border-secondary{% endif %}">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <h5 class="mb-1">{{ res.application.procedure.name }}</h5>
+                    <span class="badge bg-{% if res.status == 'confirmed' %}success{% elif res.status == 'completed' %}primary{% else %}secondary{% endif %}">
+                        {{ res.status | title }}
+                    </span>
+                </div>
+                <p class="text-muted mb-2">{{ res.application.procedure.college.name }}</p>
+                <div class="bg-light p-3 rounded">
+                    <div class="row text-center">
+                        <div class="col">
+                            <div class="fw-bold">{{ res.scheduled_date.strftime('%b %d, %Y') }}</div>
+                            <small class="text-muted">Date</small>
+                        </div>
+                        <div class="col">
+                            <div class="fw-bold">{{ res.scheduled_time.strftime('%I:%M %p') }}</div>
+                            <small class="text-muted">Time</small>
+                        </div>
+                        <div class="col">
+                            <div class="fw-bold font-monospace">{{ res.confirmation_code }}</div>
+                            <small class="text-muted">Confirmation</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="text-center py-5">
+    <p class="text-muted">No reservations yet. Apply for procedures and get accepted to see your appointments here.</p>
+</div>
+{% endif %}
+{% endblock %}

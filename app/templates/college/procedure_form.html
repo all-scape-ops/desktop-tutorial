@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if editing else 'New' }} Procedure - DentalConnect{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="mb-4">{{ 'Edit Procedure' if editing else 'Create New Procedure' }}</h2>
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label">{{ form.name.label.text }} *</label>
+                            {{ form.name(class="form-control", placeholder="e.g. Teeth Cleaning, Root Canal") }}
+                            {% for error in form.name.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">{{ form.category.label.text }} *</label>
+                            {{ form.category(class="form-select") }}
+                            {% for error in form.category.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">{{ form.description.label.text }}</label>
+                            {{ form.description(class="form-control", rows="3", placeholder="Describe what the procedure involves and what patients should expect...") }}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">{{ form.estimated_cost.label.text }} *</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                {{ form.estimated_cost(class="form-control", placeholder="50") }}
+                            </div>
+                            <div class="form-text">What the patient will pay</div>
+                            {% for error in form.estimated_cost.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">{{ form.market_cost.label.text }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                {{ form.market_cost(class="form-control", placeholder="200") }}
+                            </div>
+                            <div class="form-text">Normal price (shown as savings)</div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">{{ form.total_slots.label.text }} *</label>
+                            {{ form.total_slots(class="form-control", placeholder="10") }}
+                            {% for error in form.total_slots.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">{{ form.date_available.label.text }} *</label>
+                            {{ form.date_available(class="form-control", type="date") }}
+                            {% for error in form.date_available.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">{{ form.date_deadline.label.text }} *</label>
+                            {{ form.date_deadline(class="form-control", type="date") }}
+                            {% for error in form.date_deadline.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">{{ form.duration_minutes.label.text }}</label>
+                            {{ form.duration_minutes(class="form-control", placeholder="60") }}
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-primary">
+                            {{ 'Update Procedure' if editing else 'Create Procedure' }}
+                        </button>
+                        <a href="{{ url_for('college.procedures') }}" class="btn btn-outline-secondary ms-2">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

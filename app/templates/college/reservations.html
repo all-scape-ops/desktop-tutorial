@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Reservations - DentalConnect{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">All Reservations</h2>
+
+{% if reservations %}
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Code</th>
+                <th>Patient</th>
+                <th>Procedure</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for res in reservations %}
+            <tr>
+                <td><span class="badge bg-primary font-monospace">{{ res.confirmation_code }}</span></td>
+                <td>{{ res.application.patient.full_name }}</td>
+                <td>{{ res.application.procedure.name }}</td>
+                <td>{{ res.scheduled_date.strftime('%b %d, %Y') }}</td>
+                <td>{{ res.scheduled_time.strftime('%I:%M %p') }}</td>
+                <td>
+                    <span class="badge bg-{% if res.status == 'confirmed' %}success{% elif res.status == 'completed' %}primary{% elif res.status == 'cancelled' %}danger{% else %}secondary{% endif %}">
+                        {{ res.status | title }}
+                    </span>
+                </td>
+                <td>
+                    {% if res.status == 'confirmed' %}
+                    <form method="POST" action="{{ url_for('college.complete_reservation', res_id=res.id) }}" class="d-inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-sm btn-success" title="Mark Complete">
+                            <i class="bi bi-check-circle"></i>
+                        </button>
+                    </form>
+                    <form method="POST" action="{{ url_for('college.cancel_reservation', res_id=res.id) }}" class="d-inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Cancel this reservation?')" title="Cancel">
+                            <i class="bi bi-x-circle"></i>
+                        </button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="text-center py-5 text-muted">
+    <p>No reservations yet. Accept applications to create reservations.</p>
+</div>
+{% endif %}
+{% endblock %}

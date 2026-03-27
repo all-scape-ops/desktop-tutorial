@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block title %}Accept Application - DentalConnect{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('college.procedures') }}">Procedures</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('college.view_applications', proc_id=procedure.id) }}">{{ procedure.name }}</a></li>
+                <li class="breadcrumb-item active">Accept Application</li>
+            </ol>
+        </nav>
+
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <h5>Patient Information</h5>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <p><strong>Name:</strong> {{ application.patient.full_name }}</p>
+                        <p><strong>Zip Code:</strong> {{ application.patient.zip_code }}</p>
+                        {% if application.patient.phone %}
+                            <p><strong>Phone:</strong> {{ application.patient.phone }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Urgency:</strong>
+                            {% if application.urgency == 'emergency' %}
+                                <span class="badge bg-danger">Emergency</span>
+                            {% elif application.urgency == 'pain' %}
+                                <span class="badge bg-warning text-dark">Pain</span>
+                            {% else %}
+                                <span class="badge bg-info">Routine</span>
+                            {% endif %}
+                        </p>
+                        <p><strong>Priority Score:</strong> {{ application.priority_score }}</p>
+                        <p><strong>Applied:</strong> {{ application.applied_at.strftime('%b %d, %Y at %I:%M %p') }}</p>
+                    </div>
+                </div>
+                <div class="mt-2">
+                    <strong>Situation:</strong>
+                    <p class="mt-1">{{ application.urgency_description }}</p>
+                </div>
+                {% if application.notes_to_college %}
+                <div class="mt-2">
+                    <strong>Additional Notes:</strong>
+                    <p class="mt-1">{{ application.notes_to_college }}</p>
+                </div>
+                {% endif %}
+                {% if application.patient.medical_notes %}
+                <div class="mt-2">
+                    <strong>Medical Notes:</strong>
+                    <p class="mt-1">{{ application.patient.medical_notes }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h5>Schedule Appointment</h5>
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">{{ form.scheduled_date.label.text }} *</label>
+                            {{ form.scheduled_date(class="form-control", type="date") }}
+                            {% for error in form.scheduled_date.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">{{ form.scheduled_time.label.text }} *</label>
+                            {{ form.scheduled_time(class="form-control", type="time") }}
+                            {% for error in form.scheduled_time.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">{{ form.college_notes.label.text }}</label>
+                            {{ form.college_notes(class="form-control", rows="2", placeholder="Internal notes (not shown to patient)") }}
+                        </div>
+                    </div>
+                    <div class="mt-4 d-flex gap-2">
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-check-lg"></i> Accept & Schedule
+                        </button>
+                        <a href="{{ url_for('college.view_applications', proc_id=procedure.id) }}" class="btn btn-outline-secondary">Back</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}My Applications - DentalConnect{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">My Applications</h2>
+
+{% if applications %}
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Procedure</th>
+                <th>College</th>
+                <th>Urgency</th>
+                <th>Status</th>
+                <th>Applied</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in applications %}
+            <tr>
+                <td>{{ app.procedure.name }}</td>
+                <td>{{ app.procedure.college.name }}</td>
+                <td>
+                    {% if app.urgency == 'emergency' %}
+                        <span class="badge bg-danger">Emergency</span>
+                    {% elif app.urgency == 'pain' %}
+                        <span class="badge bg-warning text-dark">Pain</span>
+                    {% else %}
+                        <span class="badge bg-info">Routine</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if app.status == 'pending' %}
+                        <span class="badge bg-warning text-dark">{{ app.status_label }}</span>
+                    {% elif app.status == 'accepted' %}
+                        <span class="badge bg-success">{{ app.status_label }}</span>
+                    {% elif app.status == 'rejected' %}
+                        <span class="badge bg-danger">{{ app.status_label }}</span>
+                    {% elif app.status == 'waitlisted' %}
+                        <span class="badge bg-secondary">{{ app.status_label }}</span>
+                    {% elif app.status == 'completed' %}
+                        <span class="badge bg-primary">{{ app.status_label }}</span>
+                    {% else %}
+                        <span class="badge bg-dark">{{ app.status_label }}</span>
+                    {% endif %}
+                </td>
+                <td>{{ app.applied_at.strftime('%b %d, %Y') }}</td>
+                <td>
+                    {% if app.status in ('pending', 'waitlisted') %}
+                    <form method="POST" action="{{ url_for('patient.cancel_application', app_id=app.id) }}" class="d-inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Cancel this application?')">Cancel</button>
+                    </form>
+                    {% elif app.status == 'accepted' and app.reservation %}
+                    <span class="font-monospace small">{{ app.reservation.confirmation_code }}</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="text-center py-5">
+    <i class="bi bi-folder2-open display-1 text-muted"></i>
+    <h4 class="mt-3">No Applications Yet</h4>
+    <p class="text-muted">Search for dental colleges and apply for procedures.</p>
+    <a href="{{ url_for('main.search') }}" class="btn btn-primary">Find Dental Care</a>
+</div>
+{% endif %}
+{% endblock %}

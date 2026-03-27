@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% block title %}DentalConnect - Affordable Dental Care Through Education{% endblock %}
+
+{% block content %}
+<div class="hero-section text-center py-5 mb-5">
+    <h1 class="display-4 fw-bold text-primary">No Insurance? No Problem.</h1>
+    <p class="lead text-muted mx-auto" style="max-width: 700px;">
+        DentalConnect pairs people who need dental care with dental colleges
+        offering supervised, affordable treatments. Students get real-world
+        experience. You get quality care at a fraction of the cost.
+    </p>
+    <div class="mt-4">
+        <a href="{{ url_for('main.search') }}" class="btn btn-primary btn-lg me-2">
+            <i class="bi bi-search"></i> Find Dental Care Near You
+        </a>
+        <a href="{{ url_for('auth.register_patient') }}" class="btn btn-outline-primary btn-lg">
+            <i class="bi bi-person-plus"></i> Sign Up Free
+        </a>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm text-center p-4">
+            <div class="card-body">
+                <div class="feature-icon bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:64px;height:64px;">
+                    <i class="bi bi-search fs-4"></i>
+                </div>
+                <h5 class="card-title">1. Search</h5>
+                <p class="card-text text-muted">
+                    Enter your zip code to find dental colleges near you with open procedure slots.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm text-center p-4">
+            <div class="card-body">
+                <div class="feature-icon bg-success bg-opacity-10 text-success rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:64px;height:64px;">
+                    <i class="bi bi-file-earmark-check fs-4"></i>
+                </div>
+                <h5 class="card-title">2. Apply</h5>
+                <p class="card-text text-muted">
+                    Submit an application describing your needs. Emergencies and pain cases get priority.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm text-center p-4">
+            <div class="card-body">
+                <div class="feature-icon bg-warning bg-opacity-10 text-warning rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width:64px;height:64px;">
+                    <i class="bi bi-calendar-check fs-4"></i>
+                </div>
+                <h5 class="card-title">3. Get Treated</h5>
+                <p class="card-text text-muted">
+                    Once accepted, receive your confirmation code and show up for your appointment.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-6">
+        <div class="card border-primary">
+            <div class="card-body text-center">
+                <h2 class="display-6 fw-bold text-primary">{{ total_colleges }}</h2>
+                <p class="text-muted mb-0">Dental Colleges Registered</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card border-success">
+            <div class="card-body text-center">
+                <h2 class="display-6 fw-bold text-success">{{ active_procedures }}</h2>
+                <p class="text-muted mb-0">Open Procedure Slots</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-lg-8 mx-auto">
+        <div class="card bg-light border-0">
+            <div class="card-body p-4">
+                <h4>How the Priority System Works</h4>
+                <div class="mt-3">
+                    <div class="d-flex align-items-start mb-3">
+                        <span class="badge bg-danger me-3 mt-1">Tier 1</span>
+                        <div>
+                            <strong>Emergency</strong> &mdash; Severe pain, trauma, or infection.
+                            These cases are reviewed first.
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start mb-3">
+                        <span class="badge bg-warning text-dark me-3 mt-1">Tier 2</span>
+                        <div>
+                            <strong>In Pain</strong> &mdash; Ongoing discomfort that affects daily life.
+                            Reviewed after emergencies.
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start">
+                        <span class="badge bg-info me-3 mt-1">Tier 3</span>
+                        <div>
+                            <strong>Routine</strong> &mdash; Preventive care, checkups, cleaning.
+                            First-come, first-served within this tier.
+                        </div>
+                    </div>
+                </div>
+                <p class="mt-3 mb-0 text-muted small">
+                    Within each tier, earlier applications get higher priority.
+                    If slots fill up, you're placed on a waitlist and automatically promoted when a spot opens.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="text-center mb-5">
+    <h4>Are You a Dental College?</h4>
+    <p class="text-muted">Register your program to find patients for supervised clinical training.</p>
+    <a href="{{ url_for('auth.register_college') }}" class="btn btn-outline-primary">
+        <i class="bi bi-building"></i> Register Your College
+    </a>
+</div>
+{% endblock %}

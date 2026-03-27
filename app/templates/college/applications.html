@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}Applications - {{ procedure.name }} - DentalConnect{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('college.procedures') }}">Procedures</a></li>
+        <li class="breadcrumb-item active">{{ procedure.name }}</li>
+    </ol>
+</nav>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Applications for {{ procedure.name }}</h2>
+    <span class="badge bg-{{ 'success' if procedure.slots_available > 0 else 'secondary' }} fs-6">
+        {{ procedure.slots_available }}/{{ procedure.total_slots }} slots available
+    </span>
+</div>
+
+{% if ranked_applications %}
+<h5 class="mb-3">Pending / Waitlisted (ranked by priority)</h5>
+<div class="table-responsive mb-4">
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Rank</th>
+                <th>Patient</th>
+                <th>Urgency</th>
+                <th>Priority Score</th>
+                <th>Description</th>
+                <th>Applied</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in ranked_applications %}
+            <tr>
+                <td><span class="badge bg-dark">{{ loop.index }}</span></td>
+                <td>
+                    <strong>{{ app.patient.full_name }}</strong>
+                    <br><small class="text-muted">{{ app.patient.zip_code }}</small>
+                </td>
+                <td>
+                    {% if app.urgency == 'emergency' %}
+                        <span class="badge bg-danger">Emergency</span>
+                    {% elif app.urgency == 'pain' %}
+                        <span class="badge bg-warning text-dark">Pain</span>
+                    {% else %}
+                        <span class="badge bg-info">Routine</span>
+                    {% endif %}
+                </td>
+                <td>{{ app.priority_score }}</td>
+                <td>
+                    <small>{{ app.urgency_description[:100] }}{% if app.urgency_description | length > 100 %}...{% endif %}</small>
+                    {% if app.notes_to_college %}
+                        <br><small class="text-muted fst-italic">Note: {{ app.notes_to_college[:80] }}</small>
+                    {% endif %}
+                </td>
+                <td><small>{{ app.applied_at.strftime('%b %d, %Y %I:%M %p') }}</small></td>
+                <td>
+                    <span class="badge bg-{{ 'warning text-dark' if app.status == 'pending' else 'secondary' }}">
+                        {{ app.status_label }}
+                    </span>
+                </td>
+                <td>
+                    {% if not procedure.is_full or app.status == 'waitlisted' %}
+                    <a href="{{ url_for('college.accept_application', app_id=app.id) }}" class="btn btn-sm btn-success" title="Accept">
+                        <i class="bi bi-check-lg"></i>
+                    </a>
+                    {% endif %}
+                    <form method="POST" action="{{ url_for('college.reject_application', app_id=app.id) }}" class="d-inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Decline this application?')" title="Decline">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="alert alert-info">
+    <i class="bi bi-inbox"></i> No pending applications for this procedure.
+</div>
+{% endif %}
+
+{% if history %}
+<h5 class="mb-3">History</h5>
+<div class="table-responsive">
+    <table class="table table-sm">
+        <thead class="table-light">
+            <tr>
+                <th>Patient</th>
+                <th>Status</th>
+                <th>Responded</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app in history %}
+            <tr>
+                <td>{{ app.patient.full_name }}</td>
+                <td>
+                    <span class="badge bg-{{ 'success' if app.status == 'accepted' else 'primary' if app.status == 'completed' else 'danger' }}">
+                        {{ app.status_label }}
+                    </span>
+                </td>
+                <td>{{ app.responded_at.strftime('%b %d, %Y') if app.responded_at else '-' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}

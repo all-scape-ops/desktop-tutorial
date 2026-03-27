@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}College Registration - DentalConnect{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h3 class="card-title text-center mb-2">Register Your Dental College</h3>
+                <p class="text-muted text-center mb-4">Connect with patients who need care while providing hands-on training for your students.</p>
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <h5 class="mb-3 border-bottom pb-2">Account Details</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label class="form-label">{{ form.email.label.text }} *</label>
+                            {{ form.email(class="form-control") }}
+                            {% for error in form.email.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">{{ form.password.label.text }} *</label>
+                            {{ form.password(class="form-control") }}
+                            {% for error in form.password.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">{{ form.confirm_password.label.text }} *</label>
+                            {{ form.confirm_password(class="form-control") }}
+                            {% for error in form.confirm_password.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        </div>
+                    </div>
+
+                    <h5 class="mb-3 border-bottom pb-2">College Information</h5>
+                    <div class="row g-3 mb-4">
+                        <div class="col-12">
+                            <label class="form-label">{{ form.name.label.text }} *</label>
+                            {{ form.name(class="form-control", placeholder="e.g. NYU College of Dentistry") }}
+                            {% for error in form.name.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">{{ form.description.label.text }}</label>
+                            {{ form.description(class="form-control", rows="3", placeholder="Tell patients about your program...") }}
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">{{ form.address.label.text }} *</label>
+                            {{ form.address(class="form-control") }}
+                            {% for error in form.address.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-5">
+                            <label class="form-label">{{ form.city.label.text }} *</label>
+                            {{ form.city(class="form-control") }}
+                            {% for error in form.city.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">{{ form.state.label.text }} *</label>
+                            {{ form.state(class="form-control", placeholder="NY") }}
+                            {% for error in form.state.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">{{ form.zip_code.label.text }} *</label>
+                            {{ form.zip_code(class="form-control") }}
+                            {% for error in form.zip_code.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">{{ form.phone.label.text }}</label>
+                            {{ form.phone(class="form-control") }}
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">{{ form.website.label.text }}</label>
+                            {{ form.website(class="form-control", placeholder="https://...") }}
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100">Register College</button>
+                </form>
+                <hr>
+                <p class="text-center text-muted mb-0">
+                    Already registered? <a href="{{ url_for('auth.login') }}">Log in</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

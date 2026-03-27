@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block title %}College Dashboard - DentalConnect{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>{{ profile.name }}</h2>
+    <a href="{{ url_for('college.new_procedure') }}" class="btn btn-primary">
+        <i class="bi bi-plus-lg"></i> New Procedure
+    </a>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card border-primary h-100">
+            <div class="card-body text-center">
+                <h3 class="text-primary">{{ procedures | length }}</h3>
+                <p class="text-muted mb-0">Total Procedures</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-warning h-100">
+            <div class="card-body text-center">
+                <h3 class="text-warning">{{ pending_count }}</h3>
+                <p class="text-muted mb-0">Pending Applications</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-success h-100">
+            <div class="card-body text-center">
+                <h3 class="text-success">{{ upcoming_reservations | length }}</h3>
+                <p class="text-muted mb-0">Upcoming Appointments</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if procedures %}
+<h4 class="mb-3">Your Procedures</h4>
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Procedure</th>
+                <th>Category</th>
+                <th>Cost</th>
+                <th>Slots</th>
+                <th>Deadline</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for proc in procedures %}
+            <tr>
+                <td><strong>{{ proc.name }}</strong></td>
+                <td>{{ dict(proc.CATEGORIES).get(proc.category, proc.category) }}</td>
+                <td>${{ "%.0f" | format(proc.estimated_cost) }}</td>
+                <td>{{ proc.filled_slots }}/{{ proc.total_slots }}</td>
+                <td>{{ proc.date_deadline.strftime('%b %d, %Y') }}</td>
+                <td>
+                    {% if proc.is_active %}
+                        <span class="badge bg-success">Active</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Inactive</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{{ url_for('college.view_applications', proc_id=proc.id) }}" class="btn btn-sm btn-outline-primary" title="View Applications">
+                        <i class="bi bi-people"></i>
+                    </a>
+                    <a href="{{ url_for('college.edit_procedure', proc_id=proc.id) }}" class="btn btn-sm btn-outline-secondary" title="Edit">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+
+{% if upcoming_reservations %}
+<h4 class="mb-3 mt-4">Upcoming Appointments</h4>
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Code</th>
+                <th>Patient</th>
+                <th>Procedure</th>
+                <th>Date</th>
+                <th>Time</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for res in upcoming_reservations %}
+            <tr>
+                <td><span class="badge bg-primary font-monospace">{{ res.confirmation_code }}</span></td>
+                <td>{{ res.application.patient.full_name }}</td>
+                <td>{{ res.application.procedure.name }}</td>
+                <td>{{ res.scheduled_date.strftime('%b %d, %Y') }}</td>
+                <td>{{ res.scheduled_time.strftime('%I:%M %p') }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endif %}
+{% endblock %}

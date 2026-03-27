@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Apply - {{ procedure.name }} - DentalConnect{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('main.search') }}">Search</a></li>
+        <li class="breadcrumb-item"><a href="{{ url_for('main.college_detail', college_id=procedure.college_id) }}">{{ procedure.college.name }}</a></li>
+        <li class="breadcrumb-item active">Apply</li>
+    </ol>
+</nav>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm mb-3">
+            <div class="card-body">
+                <h5>{{ procedure.name }}</h5>
+                <p class="text-muted mb-1">{{ procedure.college.name }}</p>
+                <div class="d-flex gap-3">
+                    <span class="text-success fw-bold">${{ "%.0f" | format(procedure.estimated_cost) }}</span>
+                    <span class="text-muted">{{ procedure.slots_available }} slot{{ 's' if procedure.slots_available != 1 }} remaining</span>
+                    <span class="text-muted">Deadline: {{ procedure.date_deadline.strftime('%b %d, %Y') }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <h4 class="mb-3">Submit Application</h4>
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.urgency.label.text }} *</label>
+                        {{ form.urgency(class="form-select") }}
+                        <div class="form-text">
+                            Emergency and pain cases are prioritized. Please be honest about your situation.
+                        </div>
+                        {% for error in form.urgency.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.urgency_description.label.text }} *</label>
+                        {{ form.urgency_description(class="form-control", rows="4", placeholder="Please describe your dental issue, how long you've had it, and what symptoms you're experiencing...") }}
+                        {% for error in form.urgency_description.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{{ form.notes_to_college.label.text }}</label>
+                        {{ form.notes_to_college(class="form-control", rows="2", placeholder="Anything else the dental team should know (scheduling preferences, accessibility needs, etc.)...") }}
+                    </div>
+                    <div class="alert alert-info small">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>How priority works:</strong> Emergencies are reviewed first, then pain cases, then routine.
+                        Within each category, earlier applications have higher priority. If slots fill up, you'll be placed
+                        on a waitlist and automatically promoted if a spot opens.
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-send"></i> Submit Application
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
